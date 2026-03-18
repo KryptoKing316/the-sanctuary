@@ -271,7 +271,7 @@ function ReaderScreen({ cat, index, onBack }: { cat: Category; index: number; on
             <div className="mb-6" style={{ animation: 'divineBreath 4s ease-in-out infinite' }}>
               {isMother ? <DesertRose size={64} /> : <span style={{ fontSize: 48 }}>{cat.icon}</span>}
             </div>
-            <p className="font-body italic text-ivory mb-4" style={{ fontSize: '16px', lineHeight: 1.8, opacity: 0.9 }}>"{quote.text}"</p>
+            <p className="font-body italic text-ivory mb-4 text-center" style={{ fontSize: '19px', lineHeight: 1.9, opacity: 0.95 }}>"{quote.text}"</p>
             <span className="font-heading uppercase text-gold" style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.6 }}>— {quote.author}</span>
             <p className="font-heading uppercase text-gold mt-8" style={{ fontSize: '7px', letterSpacing: '0.35em', opacity: 0.4 }}>Tap to close</p>
           </motion.div>
@@ -291,29 +291,37 @@ function ReaderScreen({ cat, index, onBack }: { cat: Category; index: number; on
       </div>
 
       {/* Quote body */}
-      <div className="flex-1 overflow-y-auto px-6 pb-4">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center px-5 py-2">
         <AnimatePresence mode="wait">
-          <motion.div key={idx} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35 }}>
-            {/* Drop cap */}
-            <p className="font-body text-ivory mb-6" style={{ fontSize: '16px', lineHeight: 1.8, position: 'relative' }}>
-              <span className="font-display text-gold float-left mr-2" style={{ fontSize: '64px', lineHeight: 0.8, marginTop: 6, textShadow: '0 0 24px rgba(201,168,76,0.6)' }}>
-                {quote.text[0]}
-              </span>
-              <span style={{ fontStyle: 'italic', opacity: 0.9 }}>{quote.text.slice(1)}</span>
+          <motion.div key={idx} className="flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.35 }}>
+
+            {/* Decorative quote mark */}
+            <span className="font-display text-gold leading-none mb-3 select-none"
+              style={{ fontSize: '72px', lineHeight: 0.75, opacity: 0.18, textShadow: '0 0 30px rgba(201,168,76,0.6)' }}>❝</span>
+
+            {/* Quote text */}
+            <p className="font-body italic text-ivory"
+              style={{ fontSize: '20px', lineHeight: 1.9, opacity: 0.95, maxWidth: '320px', textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
+              {quote.text}
             </p>
 
-            {/* Author & source */}
-            <div className="mt-4 mb-4 flex items-center gap-3 opacity-70">
-              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.4),transparent)' }} />
-              <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em' }}>— {quote.author}</span>
-              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.4))' }} />
+            {/* Author */}
+            <div className="flex items-center gap-3 mt-6 w-full opacity-65">
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.5))' }} />
+              <span className="font-heading uppercase text-gold flex-shrink-0" style={{ fontSize: '8px', letterSpacing: '0.4em' }}>— {quote.author}</span>
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.5),transparent)' }} />
             </div>
+
+            {/* Source */}
             {quote.source && (
-              <p className="font-body italic text-parchment text-center mb-3" style={{ fontSize: '11px', opacity: 0.5 }}>{quote.source}</p>
+              <p className="font-body italic text-parchment mt-2" style={{ fontSize: '11px', opacity: 0.45 }}>{quote.source}</p>
             )}
+
+            {/* Scripture tie-in */}
             {quote.scripture && (
-              <div className="p-3 rounded mb-4" style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)' }}>
-                <p className="font-body italic text-gold-light text-center" style={{ fontSize: '12px', lineHeight: 1.6, opacity: 0.85 }}>{quote.scripture}</p>
+              <div className="mt-4 px-4 py-3 rounded w-full" style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)' }}>
+                <p className="font-body italic text-gold-light" style={{ fontSize: '13px', lineHeight: 1.65, opacity: 0.85 }}>{quote.scripture}</p>
               </div>
             )}
           </motion.div>

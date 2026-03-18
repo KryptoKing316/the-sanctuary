@@ -1,5 +1,28 @@
 import type { ReactNode } from 'react'
 
+function GoldenNetIcon({ active }: { active: boolean }) {
+  const gold = active ? 'rgba(232,201,107,1)' : 'rgba(201,168,76,0.4)'
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      {/* Outer circle */}
+      <circle cx="12" cy="12" r="10" stroke={gold} strokeWidth="1" fill="none"/>
+      {/* Mid circle */}
+      <circle cx="12" cy="12" r="6" stroke={gold} strokeWidth="0.8" fill="none" opacity="0.7"/>
+      {/* Inner circle */}
+      <circle cx="12" cy="12" r="2.5" stroke={gold} strokeWidth="0.8" fill="none" opacity="0.6"/>
+      {/* Radial lines — 8 spokes */}
+      {[0,45,90,135,180,225,270,315].map((angle, i) => {
+        const rad = (angle * Math.PI) / 180
+        const x2 = 12 + Math.cos(rad) * 10
+        const y2 = 12 + Math.sin(rad) * 10
+        return <line key={i} x1="12" y1="12" x2={x2} y2={y2} stroke={gold} strokeWidth="0.8" opacity="0.7"/>
+      })}
+      {/* Center node glow */}
+      <circle cx="12" cy="12" r="1.5" fill={gold}/>
+    </svg>
+  )
+}
+
 export type TabId = 'sanctuary' | 'table' | 'stations' | 'office' | 'christ' | 'rose'
 
 function ChaliceIcon({ active }: { active: boolean }) {
@@ -27,7 +50,7 @@ const TABS: Tab[] = [
   { id: 'stations',  icon: '✝️',   label: 'Stations'   },
   { id: 'office',    icon: '📖',   label: 'Teachings'  },
   { id: 'christ',    icon: '👑',   label: 'Christ'     },
-  { id: 'rose',      icon: '🕸️',   label: 'Golden Net' },
+  { id: 'rose',      icon: null,    label: 'Golden Net' },
 ]
 
 interface Props {
@@ -62,7 +85,7 @@ export default function BottomNav({ active, onChange }: Props) {
                   transform: isActive ? 'translateY(-1px)' : undefined,
                   fontSize: tab.icon ? '1.25rem' : undefined,
                 }}>
-                {tab.id === 'table' ? <ChaliceIcon active={isActive} /> : tab.icon}
+                {tab.id === 'table' ? <ChaliceIcon active={isActive} /> : tab.id === 'rose' ? <GoldenNetIcon active={isActive} /> : tab.icon}
               </span>
               <span className="font-heading uppercase"
                 style={{

@@ -142,8 +142,8 @@ export default function HomeScreen() {
           <div className="relative z-[1] flex items-center gap-3.5 p-4">
             <span className="text-3xl" style={{ filter: 'drop-shadow(0 0 10px rgba(201,168,76,0.6))' }}>🏛️</span>
             <div className="flex-1">
-              <span className="block font-heading uppercase text-gold mb-0.5" style={{ fontSize: '7px', letterSpacing: '0.45em', opacity: 0.8 }}>Live Now · The Table</span>
-              <div className="font-display text-ivory" style={{ fontSize: '14px', textShadow: '0 0 15px rgba(201,168,76,0.5)' }}>Join Communion</div>
+              <span className="block font-heading uppercase text-gold mb-0.5" style={{ fontSize: '7px', letterSpacing: '0.45em', opacity: 0.8 }}>Live Now · The Eucharist</span>
+              <div className="font-display text-ivory" style={{ fontSize: '14px', textShadow: '0 0 15px rgba(201,168,76,0.5)' }}>Join Global Holy Communion</div>
               <div className="font-body italic text-parchment flex items-center gap-1 mt-0.5" style={{ fontSize: '11px', opacity: 0.7 }}>
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 animate-live-blink" />
                 12,847 brothers & sisters gathered

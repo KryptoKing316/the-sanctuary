@@ -13,7 +13,7 @@ const EMPTY_KEYS: Record<TabId, number> = { sanctuary: 0, table: 0, stations: 0,
 function renderScreen(tab: TabId) {
   switch (tab) {
     case 'sanctuary': return <HomeScreen />
-    case 'table':     return <ComingSoonScreen icon="🍷" title="The Eucharist" description="Join thousands of brothers and sisters in simultaneous global communion — guided liturgy, live participant count, Orthodox and Catholic tracks. Building now." />
+    case 'table':     return <ComingSoonScreen icon="🍷" title="The Eucharist" description="Join thousands of brothers and sisters in simultaneous global communion — guided liturgy, live participant count, Orthodox track. Building now." />
     case 'stations':  return <ComingSoonScreen icon="✝️" title="Stations of Prayer" description="Seven immersive intercession stations — War, Trafficking, Widows, the Sick, the Lost, the Persecuted. Full-screen sacred art, ambient music, guided prayers." />
     case 'office':    return <FathersScreen />
     case 'christ':    return <ChristScreen />

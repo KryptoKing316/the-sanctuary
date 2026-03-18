@@ -25,7 +25,7 @@ const GUIDE_SECTIONS = [
     icon: '🍷',
     color: 'rgba(26,35,126,0.5)',
     desc: 'Global simultaneous communion events — thousands gathering at the same moment for guided liturgy. Coming soon.',
-    items: ['Guided Orthodox & Catholic communion liturgy', 'Live participant count worldwide', 'Scheduled communion events'],
+    items: ['Guided Orthodox communion liturgy', 'Live participant count worldwide', 'Scheduled communion events'],
   },
   {
     tab: 'Stations',

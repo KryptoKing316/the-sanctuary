@@ -1,4 +1,3 @@
-import React from 'react'
 
 export type TabId = 'sanctuary' | 'table' | 'stations' | 'office' | 'rose'
 

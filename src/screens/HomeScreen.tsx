@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PrayerCard from '../components/ui/PrayerCard'
 import { usePrayerCounter, formatCount } from '../hooks/usePrayerCounter'
@@ -15,7 +15,7 @@ export default function HomeScreen() {
   const [selectedCat, setSelectedCat] = useState<PrayerCategory>('war')
   const [prayerText, setPrayerText] = useState('')
   const [isAnon, setIsAnon] = useState(true)
-  const toastTimer = useRef<ReturnType<typeof setTimeout>>()
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   function handlePray(id: string) {
     increment()

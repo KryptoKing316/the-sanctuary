@@ -13,6 +13,7 @@ export function useParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const particlesRef = useRef<Particle[]>([])
   const rafRef = useRef<number>(0)
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
 
   const createParticle = (x: number, y: number): Particle => {
     const r = Math.random()
@@ -33,16 +34,18 @@ export function useParticles() {
 
   const launch = useCallback((x: number, y: number, count = 40) => {
     for (let i = 0; i < count; i++) {
-      setTimeout(() => {
+      const t = setTimeout(() => {
         particlesRef.current.push(createParticle(x, y))
       }, i * 25)
+      timersRef.current.push(t)
     }
   }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')!
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
     const resize = () => {
       canvas.width = window.innerWidth
@@ -90,6 +93,8 @@ export function useParticles() {
       window.removeEventListener('resize', resize)
       cancelAnimationFrame(rafRef.current)
       clearInterval(ambientTimer)
+      timersRef.current.forEach(clearTimeout)
+      timersRef.current = []
     }
   }, [launch])
 

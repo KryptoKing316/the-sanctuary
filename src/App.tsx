@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import BottomNav, { TabId } from './components/layout/BottomNav'
+import BottomNav from './components/layout/BottomNav'
+import type { TabId } from './components/layout/BottomNav'
 import HomeScreen from './screens/HomeScreen'
 import ComingSoonScreen from './screens/ComingSoonScreen'
 

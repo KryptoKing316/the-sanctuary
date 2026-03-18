@@ -279,7 +279,7 @@ function ScriptureReader({ passages, startIndex, title, onBack, accentColor = 'r
       </div>
 
       {/* Actions */}
-      <div className="flex-shrink-0 px-5 pb-6 pt-2 flex flex-col gap-3">
+      <div className="flex-shrink-0 px-5 pb-24 pt-2 flex flex-col gap-3">
         <button onClick={() => setMeditating(true)}
           className="w-full py-3 rounded font-heading uppercase text-gold"
           style={{ fontSize: '9px', letterSpacing: '0.4em', background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.35)' }}>

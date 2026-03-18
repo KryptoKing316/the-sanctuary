@@ -236,7 +236,7 @@ export default function GoldenNetScreen() {
       <div className="px-4 mb-4 flex flex-col gap-3">
         {[
           { icon: '⚡', title: 'Agreement', desc: 'When two or more agree, heaven moves. The net is strongest where believers pray together.' },
-          { icon: '🌍', title: 'Coverage', desc: 'From Jerusalem to the ends of the earth. Every nation, every tongue, every tribe covered.' },
+          { icon: '🌍', title: 'Unity', desc: '"...that they may all be one, just as you, Father, are in me, and I in you, that they also may be in us, so that the world may believe that you have sent me." — John 17:21' },
           { icon: '👑', title: 'Authority', desc: 'Christ is King over every principality. The Golden Net is His dominion made visible in prayer.' },
         ].map(p => (
           <div key={p.icon} className="flex items-start gap-3 p-3 rounded" style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.15)' }}>

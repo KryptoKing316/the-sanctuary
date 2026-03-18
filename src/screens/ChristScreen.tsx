@@ -8,7 +8,52 @@ import {
 } from '../data/scripture'
 import type { ScripturePassage } from '../data/scripture'
 
-type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-reader' | 'bible-parts' | 'bible-books'
+type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-reader' | 'bible-parts' | 'bible-books' | 'bible-chapters'
+
+// Chapter counts for all 88 Ethiopian Bible books
+const CHAPTER_COUNTS: Record<string, number> = {
+  'The Book of Genesis': 50, 'The Book of Exodus': 40, 'The Book of Leviticus': 27,
+  'The Book of Numbers': 36, 'The Book of Deuteronomy': 34, 'The Book of Joshua': 24,
+  'The Book of Judges': 21, 'The Book of Ruth': 4, 'The First Book of Samuel': 31,
+  'The Second Book of Samuel': 24, 'The First Book of Kings': 22, 'The Second Book of Kings': 25,
+  'The Book of the Chronicles': 29, 'The Second Book of the Chronicles': 36,
+  'The Book of Ezra': 10, 'The Book of Nehemiah': 13, 'The Book of Job': 42,
+  'The Book of Psalms': 150, 'The Book of Proverbs': 31, 'The Book of Ecclesiastes': 12,
+  'The Book of Songs': 8, 'The Book of the Prophet Isaiah': 66,
+  'The Book of the Prophet Jeremiah': 52, 'The Lamentations of Jeremiah': 5,
+  'The Lamentations the Prophet Ezekiel': 48, 'The Book of Daniel': 12,
+  'The Book of Hosea': 14, 'The Book of Joel': 3, 'The Book of Amos': 9,
+  'The Book of Obadiah': 1, 'The Book of Jonah': 4, 'The Book of Micah': 7,
+  'The Book of Nahum': 3, 'The Book of Habakkuk': 3, 'The Book of Zephaniah': 3,
+  'The Book of Haggai': 2, 'The Book of Zechariah': 14, 'The Book of Malachi': 4,
+  'The Gospel of Matthew': 28, 'The Gospel of Mark': 16, 'The Gospel of Luke': 24,
+  'The Gospel of John': 21, 'The Acts of the Apostles': 28,
+  'The Letter of the Romans': 16, 'The First Letter of the Corinthians': 16,
+  'The Second Letter of the Corinthians': 13, 'The Letter to the Galatians': 6,
+  'The Letter to the Ephesians': 6, 'The Letter to the Philippians': 4,
+  'The Letter to the Colossians': 4, 'The First Letter to the Thessalonians': 5,
+  'The Second Letter to the Thessalonians': 3, 'The First Letter to Timothy': 6,
+  'The Second Letter to Timothy': 4, 'The Letter to Titus': 3,
+  'The Letter to Philemon': 1, 'The Letter to the Hebrews': 13,
+  'The Letter to James': 5, 'The First Letter of Peter': 5,
+  'The Second Letter of Peter': 3, 'The First Letter of John': 5,
+  'The Second Letter of John': 1, 'The Third Letter of John': 1,
+  'The Letter of Jude': 1, 'The Book of Revelation': 22,
+  // Part II — Ethiopian additions
+  'The First Book of Enoch': 108, 'The Second Book of Enoch': 68, 'The Third Book of Enoch': 48,
+  'The Book of Jubilees': 50,
+  'First Book of Ethiopian Maccabees (Meqabyan)': 36,
+  'Second Book of Ethiopian Maccabees (Meqabyan)': 14,
+  'Third Book of Ethiopian Maccabees (Meqabyan)': 10,
+  'First Book of Esdras': 9, 'The Apocalypse of Esdras': 7,
+  'The Letter of Jeremiah': 1, 'The Book of Baruch': 6,
+  'The Apocalypse of Baruch': 87, 'The Prayer of Manasseh': 1,
+  'The History of Susanna': 1, 'Bel and the Dragon': 1, 'The Additions to Esther': 7,
+  // Part III
+  'The Testament of Abraham': 20, 'The Testament of Isaac': 8, 'The Testament of Jacob': 7,
+  'The Psalms of Solomon': 18, 'The Didache': 16,
+  'The Apocalypse of Peter': 17, 'The Martyrdom and Ascension of Isaiah': 11,
+}
 
 const CHRIST_THEMES: { id: string; label: string; icon: string; desc: string }[] = [
   { id: 'beatitudes',       label: 'The Beatitudes',       icon: '⛰️', desc: 'Blessed are the poor in spirit…' },
@@ -421,7 +466,7 @@ function BiblePartsView({ onBack, onPart }: { onBack: () => void; onPart: (partI
 }
 
 // ── BIBLE BOOKS LIST ──────────────────────────────────────────
-function BibleBooksView({ partIdx, onBack }: { partIdx: number; onBack: () => void }) {
+function BibleBooksView({ partIdx, onBack, onBook }: { partIdx: number; onBack: () => void; onBook: (book: string) => void }) {
   const part = ETHIOPIAN_BIBLE_BOOKS[partIdx]
   return (
     <div className="flex flex-col h-full"
@@ -436,13 +481,58 @@ function BibleBooksView({ partIdx, onBack }: { partIdx: number; onBack: () => vo
         <div className="h-px mt-3 mb-2 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
       </div>
       <div className="flex-1 overflow-y-auto px-4 pb-24 pt-2">
-        {part.books.map((book, i) => (
-          <div key={i} className="flex items-center gap-3 py-3 px-3 mb-1 rounded"
-            style={{ borderBottom: '1px solid rgba(201,168,76,0.08)' }}>
-            <span className="font-heading text-gold opacity-40" style={{ fontSize: '9px', minWidth: 24 }}>{i + 1}</span>
-            <span className="font-body italic text-parchment" style={{ fontSize: '13.5px', opacity: 0.85, lineHeight: 1.4 }}>{book}</span>
-          </div>
-        ))}
+        {part.books.map((book, i) => {
+          const chapters = CHAPTER_COUNTS[book] ?? 0
+          return (
+            <motion.button key={i} whileTap={{ scale: 0.985 }} onClick={() => onBook(book)}
+              className="w-full text-left flex items-center gap-3 py-3 px-3 mb-1 rounded"
+              style={{ borderBottom: '1px solid rgba(201,168,76,0.08)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+              <span className="font-heading text-gold opacity-40" style={{ fontSize: '9px', minWidth: 24 }}>{i + 1}</span>
+              <span className="font-body italic text-parchment flex-1 text-left" style={{ fontSize: '13.5px', opacity: 0.85, lineHeight: 1.4 }}>{book}</span>
+              {chapters > 0 && (
+                <span className="font-heading uppercase text-gold" style={{ fontSize: '6.5px', letterSpacing: '0.3em', opacity: 0.4, flexShrink: 0 }}>{chapters} ch</span>
+              )}
+              <span style={{ color: 'rgba(201,168,76,0.35)', fontSize: 12, flexShrink: 0 }}>›</span>
+            </motion.button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ── BIBLE CHAPTERS VIEW ───────────────────────────────────────
+function BibleChaptersView({ book, onBack }: { book: string; onBack: () => void }) {
+  const chapterCount = CHAPTER_COUNTS[book] ?? 0
+  const chapters = Array.from({ length: chapterCount }, (_, i) => i + 1)
+  const shortName = book.replace(/^The (Book of( the Prophet)?|Gospel of|Letter (of|to( the)?)|First |Second |Third |Acts of the |Lamentations (of|the Prophet)|Martyrdom and Ascension of)\s*/i, '').trim()
+
+  return (
+    <div className="flex flex-col h-full"
+      style={{ background: 'linear-gradient(180deg,#060a08 0%,#080910 100%)' }}>
+      <div className="flex-shrink-0 pt-12 px-5 pb-0">
+        <button onClick={onBack} className="flex items-center gap-2 mb-4 font-heading uppercase text-gold" style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+          ‹ Back
+        </button>
+        <h2 className="font-display text-gold-light mb-1" style={{ fontSize: '18px', textShadow: '0 0 16px rgba(201,168,76,0.4)', lineHeight: 1.2 }}>{book}</h2>
+        <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em', opacity: 0.45 }}>{chapterCount} chapters · Ethiopian Orthodox Canon</span>
+        <div className="h-px mt-3 mb-3 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-1">
+        <div className="grid grid-cols-4 gap-2">
+          {chapters.map(ch => (
+            <div key={ch} className="flex items-center justify-center py-3 rounded"
+              style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.14)' }}>
+              <span className="font-heading text-gold" style={{ fontSize: '13px', opacity: 0.8 }}>{ch}</span>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 p-4 rounded text-center" style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.12)' }}>
+          <span className="block font-heading uppercase text-gold mb-2" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.6 }}>Full Text — Phase 2</span>
+          <p className="font-body italic text-parchment" style={{ fontSize: '12px', opacity: 0.5, lineHeight: 1.6 }}>
+            Complete chapter-by-chapter text of {shortName} from the Ethiopian Orthodox canon is coming in the next phase of Theosis.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -455,6 +545,7 @@ export default function ChristScreen() {
   const [christThemeLabel, setChristThemeLabel] = useState('All Teachings')
   const [enochBookTitle, setEnochBookTitle] = useState('__all__')
   const [biblePartIdx, setBiblePartIdx] = useState(0)
+  const [selectedBook, setSelectedBook] = useState('')
 
   const christPassages = christTheme === '__all__'
     ? JESUS_TEACHINGS
@@ -516,7 +607,13 @@ export default function ChristScreen() {
         {view === 'bible-books' && (
           <motion.div key="bible-books" className="absolute inset-0"
             initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-            <BibleBooksView partIdx={biblePartIdx} onBack={() => setView('bible-parts')} />
+            <BibleBooksView partIdx={biblePartIdx} onBack={() => setView('bible-parts')} onBook={(book) => { setSelectedBook(book); setView('bible-chapters') }} />
+          </motion.div>
+        )}
+        {view === 'bible-chapters' && (
+          <motion.div key="bible-chapters" className="absolute inset-0"
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+            <BibleChaptersView book={selectedBook} onBack={() => setView('bible-books')} />
           </motion.div>
         )}
       </AnimatePresence>

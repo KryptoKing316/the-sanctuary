@@ -12,8 +12,8 @@ const SCREENS: Record<TabId, React.ReactNode> = {
   sanctuary: <HomeScreen />,
   table: (
     <ComingSoonScreen
-      icon="🕯️"
-      title="The Table"
+      icon="🍷"
+      title="The Eucharist"
       description="Join thousands of brothers and sisters in simultaneous global communion — guided liturgy, live participant count, Orthodox and Catholic tracks. Building now."
     />
   ),

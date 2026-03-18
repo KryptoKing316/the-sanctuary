@@ -119,7 +119,7 @@ export default function HomeScreen() {
           <div className="absolute bottom-7 left-0 right-0 text-center z-10 px-5">
             <span className="block font-heading uppercase text-gold mb-1" style={{ fontSize: '7.5px', letterSpacing: '0.55em', opacity: 0.65 }}>Est. Anno Domini MMXXV</span>
             <h1 className="font-display text-ivory" style={{ fontSize: '28px', fontWeight: 900, letterSpacing: '0.05em', textShadow: '0 0 20px rgba(201,168,76,1),0 0 40px rgba(201,168,76,0.6),0 2px 6px rgba(0,0,0,1)' }}>Theosis</h1>
-            <span className="block font-body italic text-parchment mt-1" style={{ fontSize: '12px', opacity: 0.75, textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}>Where Millions Pray as One With Christ</span>
+            <span className="block font-body italic text-parchment mt-2" style={{ fontSize: '17px', fontWeight: 700, opacity: 0.92, textShadow: '0 0 16px rgba(201,168,76,0.4),0 1px 6px rgba(0,0,0,0.9)', letterSpacing: '0.01em' }}>Where Millions Pray as One With Christ</span>
           </div>
         </div>
 

@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CATEGORIES } from '../data/quotes'
 import type { Category, Quote } from '../data/quotes'
+import { DIDACHE_SECTIONS } from '../data/didache'
+import type { DidacheSection, DidachePassage } from '../data/didache'
 
-type View = 'library' | 'category' | 'reader'
+type View = 'library' | 'category' | 'reader' | 'didache-list' | 'didache-reader'
 
 // Deterministic quote of the day based on day-of-year
 function getQuoteOfDay(): Quote & { categoryLabel: string } {
@@ -63,7 +65,7 @@ function RoseWindow({ size = 80 }: { size?: number }) {
 }
 
 // ── LIBRARY SCREEN ──────────────────────────────────────────
-function LibraryScreen({ onSelect }: { onSelect: (cat: Category) => void }) {
+function LibraryScreen({ onSelect, onDidache }: { onSelect: (cat: Category) => void; onDidache: () => void }) {
   const qotd = getQuoteOfDay()
   const churchFathers = CATEGORIES.filter(c => !c.id.startsWith('desert') && !c.id.startsWith('mothers'))
   const desertFathers = CATEGORIES.filter(c => c.id.startsWith('desert'))
@@ -116,6 +118,27 @@ function LibraryScreen({ onSelect }: { onSelect: (cat: Category) => void }) {
         {/* Desert Mothers */}
         <SectionHeader label="Wisdom of the Desert Mothers" subtitle="Amma Syncletica, Sarah, Theodora & others" isDesertMothers />
         {desertMothers.map(cat => <CategoryCard key={cat.id} cat={cat} onSelect={onSelect} isDesertMothers />)}
+
+        {/* Didache */}
+        <SectionHeader label="The Didache" subtitle="Teaching of the Twelve Apostles · c. 1st century AD" icon="📜" />
+        <motion.button
+          whileTap={{ scale: 0.985 }}
+          onClick={onDidache}
+          className="w-full text-left rounded overflow-hidden mb-3"
+          style={{ border: '1px solid rgba(201,168,76,0.3)', boxShadow: '0 2px 16px rgba(0,0,0,0.4)' }}>
+          <div className="relative">
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(80,50,0,0.6) 0%, transparent 60%), linear-gradient(180deg, #0e0c06 0%, #080910 100%)' }} />
+            <div className="relative z-10 flex items-center gap-4 p-4">
+              <span style={{ fontSize: 28, filter: 'drop-shadow(0 0 8px rgba(201,168,76,0.4))', width: 40, textAlign: 'center', flexShrink: 0 }}>📜</span>
+              <div className="flex-1">
+                <div className="font-display text-gold-light mb-1" style={{ fontSize: '13px', textShadow: '0 0 12px rgba(201,168,76,0.5)' }}>The Didache</div>
+                <div className="font-body italic text-parchment" style={{ fontSize: '11.5px', opacity: 0.65, lineHeight: 1.4 }}>The Two Ways · Baptism · Prayer · The Eucharist</div>
+                <span className="font-heading uppercase text-gold mt-1 block" style={{ fontSize: '7px', letterSpacing: '0.3em', opacity: 0.6 }}>{DIDACHE_SECTIONS.length} sections</span>
+              </div>
+              <span style={{ color: 'rgba(201,168,76,0.5)', fontSize: 14, flexShrink: 0 }}>›</span>
+            </div>
+          </div>
+        </motion.button>
       </div>
     </div>
   )
@@ -330,10 +353,132 @@ function ReaderScreen({ cat, index, onBack }: { cat: Category; index: number; on
 }
 
 // ── MAIN EXPORT ─────────────────────────────────────────────
+// ── DIDACHE SECTION LIST ─────────────────────────────────────
+function DidacheListScreen({ onBack, onSection }: { onBack: () => void; onSection: (s: DidacheSection) => void }) {
+  const partColors: Record<string, string> = {
+    'Part I — The Two Ways': 'rgba(80,50,0,0.5)',
+    'Part II — Instructions for Catechumens': 'rgba(26,35,126,0.45)',
+  }
+  return (
+    <div className="flex flex-col h-full"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(80,50,0,0.4) 0%, transparent 55%), linear-gradient(180deg,#0e0c06 0%,#080910 100%)' }}>
+      <div className="flex-shrink-0 pt-12 px-5 pb-0">
+        <button onClick={onBack} className="flex items-center gap-2 mb-4 font-heading uppercase text-gold" style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+          ‹ Library
+        </button>
+        <div className="flex items-center gap-3 mb-1">
+          <span style={{ fontSize: 28 }}>📜</span>
+          <div>
+            <h2 className="font-display text-gold-light" style={{ fontSize: '18px', textShadow: '0 0 20px rgba(201,168,76,0.5)', lineHeight: 1.1 }}>The Didache</h2>
+            <p className="font-body italic text-parchment" style={{ fontSize: '10px', opacity: 0.5 }}>Teaching of the Twelve Apostles · c. 1st century AD</p>
+          </div>
+        </div>
+        <div className="h-px mt-3 mb-1 opacity-30" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 pb-24 pt-3">
+        {DIDACHE_SECTIONS.map(section => (
+          <motion.button key={section.id} whileTap={{ scale: 0.985 }} onClick={() => onSection(section)}
+            className="w-full text-left mb-3 rounded overflow-hidden"
+            style={{ border: '1px solid rgba(201,168,76,0.18)', boxShadow: '0 2px 12px rgba(0,0,0,0.4)' }}>
+            <div className="relative">
+              <div className="absolute inset-0" style={{ background: `linear-gradient(135deg,${partColors[section.part] ?? 'rgba(50,40,0,0.5)'},rgba(5,5,12,0.95))` }} />
+              <div className="relative z-10 flex items-center gap-3 p-4">
+                <span style={{ fontSize: 24, flexShrink: 0, width: 36, textAlign: 'center' }}>{section.icon}</span>
+                <div className="flex-1">
+                  <span className="font-heading uppercase text-gold block mb-1" style={{ fontSize: '6.5px', letterSpacing: '0.4em', opacity: 0.55 }}>{section.part}</span>
+                  <div className="font-display text-gold-light" style={{ fontSize: '13px', textShadow: '0 0 10px rgba(201,168,76,0.4)' }}>{section.title}</div>
+                  {section.intro && <p className="font-body italic text-parchment mt-1" style={{ fontSize: '10.5px', opacity: 0.55, lineHeight: 1.4 }}>"{section.intro.slice(0, 80)}…"</p>}
+                  <span className="font-heading uppercase text-gold mt-1 block" style={{ fontSize: '6.5px', letterSpacing: '0.3em', opacity: 0.5 }}>{section.passages.length} passages</span>
+                </div>
+                <span style={{ color: 'rgba(201,168,76,0.5)', fontSize: 14, flexShrink: 0 }}>›</span>
+              </div>
+            </div>
+          </motion.button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── DIDACHE PASSAGE READER ────────────────────────────────────
+function DidacheReaderScreen({ section, onBack }: { section: DidacheSection; onBack: () => void }) {
+  const [idx, setIdx] = useState(0)
+  const [shared, setShared] = useState(false)
+  const p: DidachePassage = section.passages[idx]
+
+  function handleShare() {
+    const text = `"${p.text}" — The Didache, ${section.title}\n\nFrom Theosis`
+    if (navigator.share) navigator.share({ text }).catch(() => {})
+    else navigator.clipboard.writeText(text).then(() => { setShared(true); setTimeout(() => setShared(false), 2000) })
+  }
+
+  return (
+    <div className="flex flex-col h-full"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(80,50,0,0.45) 0%, transparent 55%), linear-gradient(180deg,#0e0c06 0%,#060708 100%)' }}>
+      <div className="flex-shrink-0 pt-12 px-5 pb-0">
+        <button onClick={onBack} className="flex items-center gap-2 mb-3 font-heading uppercase text-gold" style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+          ‹ {section.title}
+        </button>
+        <div className="flex justify-between mb-2">
+          <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.5 }}>{idx + 1} of {section.passages.length}</span>
+          <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.5 }}>The Didache</span>
+        </div>
+        <div className="h-px mb-3 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-6 pb-4">
+        <AnimatePresence mode="wait">
+          <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+            {p.heading && (
+              <span className="font-heading uppercase text-gold block mb-3" style={{ fontSize: '8px', letterSpacing: '0.45em', opacity: 0.7 }}>{p.heading}</span>
+            )}
+            <p className="font-body text-ivory mb-5" style={{ fontSize: '15.5px', lineHeight: 1.85 }}>
+              <span className="font-display text-gold float-left mr-2" style={{ fontSize: '60px', lineHeight: 0.82, marginTop: 6, textShadow: '0 0 24px rgba(201,168,76,0.7)' }}>
+                {p.text[0]}
+              </span>
+              <span style={{ fontStyle: 'italic', opacity: 0.9 }}>{p.text.slice(1)}</span>
+            </p>
+            <div className="flex items-center gap-3 mt-2 mb-3 opacity-60">
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.4),transparent)' }} />
+              <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em' }}>{section.title}</span>
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.4))' }} />
+            </div>
+            {p.scripture && (
+              <div className="p-3 rounded" style={{ background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.18)' }}>
+                <p className="font-body italic text-gold-light text-center" style={{ fontSize: '11px', lineHeight: 1.6, opacity: 0.8 }}>{p.scripture}</p>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="flex-shrink-0 px-5 pb-6 pt-2 flex gap-3">
+        <button disabled={idx === 0} onClick={() => setIdx(i => i - 1)}
+          className="flex-1 py-2 rounded font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)', opacity: idx === 0 ? 0.3 : 1 }}>
+          ‹ Prev
+        </button>
+        <button onClick={handleShare}
+          className="flex-1 py-2 rounded font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)' }}>
+          {shared ? '✓ Copied' : '↑ Share'}
+        </button>
+        <button disabled={idx === section.passages.length - 1} onClick={() => setIdx(i => i + 1)}
+          className="flex-1 py-2 rounded font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)', opacity: idx === section.passages.length - 1 ? 0.3 : 1 }}>
+          Next ›
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── MAIN EXPORT ───────────────────────────────────────────────
 export default function FathersScreen() {
   const [view, setView] = useState<View>('library')
   const [selectedCat, setSelectedCat] = useState<Category | null>(null)
   const [readerIndex, setReaderIndex] = useState(0)
+  const [selectedDidache, setSelectedDidache] = useState<DidacheSection | null>(null)
 
   function openCategory(cat: Category) {
     setSelectedCat(cat)
@@ -351,7 +496,7 @@ export default function FathersScreen() {
         {view === 'library' && (
           <motion.div key="library" className="absolute inset-0"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <LibraryScreen onSelect={openCategory} />
+            <LibraryScreen onSelect={openCategory} onDidache={() => setView('didache-list')} />
           </motion.div>
         )}
         {view === 'category' && selectedCat && (
@@ -364,6 +509,18 @@ export default function FathersScreen() {
           <motion.div key="reader" className="absolute inset-0"
             initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
             <ReaderScreen cat={selectedCat} index={readerIndex} onBack={() => setView('category')} />
+          </motion.div>
+        )}
+        {view === 'didache-list' && (
+          <motion.div key="didache-list" className="absolute inset-0"
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+            <DidacheListScreen onBack={() => setView('library')} onSection={(s) => { setSelectedDidache(s); setView('didache-reader') }} />
+          </motion.div>
+        )}
+        {view === 'didache-reader' && selectedDidache && (
+          <motion.div key="didache-reader" className="absolute inset-0"
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+            <DidacheReaderScreen section={selectedDidache} onBack={() => setView('didache-list')} />
           </motion.div>
         )}
       </AnimatePresence>

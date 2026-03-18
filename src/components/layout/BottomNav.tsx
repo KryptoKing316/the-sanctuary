@@ -1,14 +1,15 @@
 
-export type TabId = 'sanctuary' | 'table' | 'stations' | 'office' | 'rose'
+export type TabId = 'sanctuary' | 'table' | 'stations' | 'office' | 'christ' | 'rose'
 
 interface Tab { id: TabId; icon: string; label: string }
 
 const TABS: Tab[] = [
-  { id: 'sanctuary', icon: '⛪', label: 'Sanctuary'  },
+  { id: 'sanctuary', icon: '⛪', label: 'Theosis'    },
   { id: 'table',     icon: '🕯️', label: 'The Table'  },
   { id: 'stations',  icon: '✝️',  label: 'Stations'   },
-  { id: 'office',    icon: '📖', label: 'Daily Office'},
-  { id: 'rose',      icon: '🌹', label: 'Rose Window' },
+  { id: 'office',    icon: '📖', label: 'Teachings'  },
+  { id: 'christ',    icon: '👑', label: 'Christ'     },
+  { id: 'rose',      icon: '🕸️', label: 'Golden Net' },
 ]
 
 interface Props {

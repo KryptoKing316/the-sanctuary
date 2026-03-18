@@ -4,6 +4,8 @@ import BottomNav from './components/layout/BottomNav'
 import type { TabId } from './components/layout/BottomNav'
 import HomeScreen from './screens/HomeScreen'
 import FathersScreen from './screens/FathersScreen'
+import ChristScreen from './screens/ChristScreen'
+import GoldenNetScreen from './screens/GoldenNetScreen'
 import ComingSoonScreen from './screens/ComingSoonScreen'
 
 const SCREENS: Record<TabId, React.ReactNode> = {
@@ -23,13 +25,8 @@ const SCREENS: Record<TabId, React.ReactNode> = {
     />
   ),
   office: <FathersScreen />,
-  rose: (
-    <ComingSoonScreen
-      icon="🌹"
-      title="The Rose Window"
-      description="A living rose window that fills petal by petal as the global community prays. Your contribution made visible. A world map of intercession hotspots."
-    />
-  ),
+  christ: <ChristScreen />,
+  rose: <GoldenNetScreen />,
 }
 
 export default function App() {

@@ -161,6 +161,34 @@ export default function HomeScreen() {
           <span className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gold" style={{ fontSize: '9px', opacity: 0.3 }}>✦</span>
         </div>
 
+        {/* ── OFFER A PRAYER ───────────────── */}
+        <div className="px-4 mb-4">
+          <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowModal(true)}
+            className="w-full rounded overflow-hidden text-left"
+            style={{ background: 'linear-gradient(135deg,rgba(127,0,0,0.35) 0%,rgba(26,35,126,0.35) 100%)', border: '1px solid rgba(201,168,76,0.35)', boxShadow: '0 4px 24px rgba(0,0,0,0.5)' }}>
+            <div className="flex items-center gap-4 p-4">
+              <div className="flex items-center justify-center rounded-full"
+                style={{ width: 48, height: 48, background: 'radial-gradient(circle,rgba(201,168,76,0.2),rgba(201,168,76,0.05))', border: '1px solid rgba(201,168,76,0.4)', flexShrink: 0 }}>
+                <span style={{ fontSize: 22 }}>🙏🏽</span>
+              </div>
+              <div className="flex-1">
+                <div className="font-display text-gold-light mb-1" style={{ fontSize: '15px', textShadow: '0 0 14px rgba(201,168,76,0.4)' }}>Offer a Prayer</div>
+                <p className="font-body italic text-parchment" style={{ fontSize: '11.5px', opacity: 0.65, lineHeight: 1.45 }}>Place your intercession on the wall — for war, the sick, the lost, the persecuted</p>
+              </div>
+              <span style={{ color: 'rgba(201,168,76,0.6)', fontSize: 20, flexShrink: 0 }}>⊕</span>
+            </div>
+            {/* Category chips */}
+            <div className="flex gap-2 px-4 pb-4 flex-wrap">
+              {(Object.entries(CATEGORY_META) as [PrayerCategory, typeof CATEGORY_META[PrayerCategory]][]).map(([key, meta]) => (
+                <span key={key} className="font-heading uppercase text-gold rounded-full px-2 py-1"
+                  style={{ fontSize: '6px', letterSpacing: '0.3em', background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.2)', opacity: 0.8 }}>
+                  {meta.icon} {meta.label}
+                </span>
+              ))}
+            </div>
+          </motion.button>
+        </div>
+
         {/* ── SECTION HEADER ───────────────── */}
         <div className="flex items-center gap-2.5 px-5 pb-3">
           <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent)' }} />

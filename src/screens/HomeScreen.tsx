@@ -353,7 +353,7 @@ export default function HomeScreen() {
               onClick={() => setShowGuide(false)} />
             <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 280 }}
-              className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[160] rounded-t-2xl overflow-hidden"
+              className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[430px] z-[160] rounded-t-2xl overflow-hidden"
               style={{ background: 'linear-gradient(180deg,#0e0f1e 0%,#0a0b14 100%)', borderTop: '1px solid rgba(201,168,76,0.35)', maxHeight: '88vh' }}>
               <div className="overflow-y-auto pb-10" style={{ maxHeight: '88vh' }}>
                 <div className="sticky top-0 z-10 px-5 pt-5 pb-3"
@@ -429,7 +429,7 @@ export default function HomeScreen() {
               onClick={() => setShowModal(false)} />
             <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[160] rounded-t-2xl"
+              className="fixed bottom-0 left-0 right-0 mx-auto w-full max-w-[430px] z-[160] rounded-t-2xl"
               style={{ background: 'linear-gradient(180deg,#12141f 0%,#0d0e1a 100%)', borderTop: '1px solid rgba(201,168,76,0.3)', padding: '24px 20px 40px' }}>
               <div className="w-9 h-[3px] rounded mx-auto mb-5" style={{ background: 'rgba(201,168,76,0.3)' }} />
               <div className="font-display text-gold-light text-center mb-5" style={{ fontSize: '16px', textShadow: '0 0 15px rgba(201,168,76,0.4)' }}>Offer a Prayer</div>

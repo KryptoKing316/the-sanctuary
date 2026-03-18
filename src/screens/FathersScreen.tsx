@@ -225,7 +225,7 @@ function ReaderScreen({ cat, index, onBack }: { cat: Category; index: number; on
   const isMother = cat.isDesertMothers
 
   function handleShare() {
-    const text = `"${quote.text}" — ${quote.author}\n\nPray with us at The Sanctuary`
+    const text = `"${quote.text}" — ${quote.author}\n\nPray with us at Theosis`
     if (navigator.share) {
       navigator.share({ text }).catch(() => {})
     } else {

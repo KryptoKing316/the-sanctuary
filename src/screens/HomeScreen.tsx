@@ -1,10 +1,65 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import PrayerCard from '../components/ui/PrayerCard'
 import { usePrayerCounter, formatCount } from '../hooks/usePrayerCounter'
 import { useParticles } from '../hooks/useParticles'
 import type { PrayerRequest, PrayerCategory } from '../data/prayers'
 import { MOCK_PRAYERS, CATEGORY_META } from '../data/prayers'
+
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+  || ('standalone' in navigator && (navigator as { standalone?: boolean }).standalone === true)
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+const isAndroid = /Android/.test(navigator.userAgent)
+
+const GUIDE_SECTIONS = [
+  {
+    tab: 'Theosis',
+    icon: '⛪',
+    color: 'rgba(127,0,0,0.5)',
+    desc: 'The home base. Live global prayer counter, the Prayer Wall where anyone can post an intercession, and the Eucharist live-stream banner. Tap "Offer a Prayer" to post your own request.',
+    items: ['Live prayer counter — rises every second', 'Prayer Wall — read & pray over others\' requests', 'Offer a Prayer — post your own intercession', 'Tap the ⊕ button anytime to add a prayer'],
+  },
+  {
+    tab: 'The Eucharist',
+    icon: '🍷',
+    color: 'rgba(26,35,126,0.5)',
+    desc: 'Global simultaneous communion events — thousands gathering at the same moment for guided liturgy. Coming soon.',
+    items: ['Guided Orthodox & Catholic communion liturgy', 'Live participant count worldwide', 'Scheduled communion events'],
+  },
+  {
+    tab: 'Stations',
+    icon: '✝️',
+    color: 'rgba(60,20,0,0.5)',
+    desc: 'Seven deep-intercession stations focused on specific missions. Coming soon.',
+    items: ['War victims', 'Trafficking survivors', 'Widows & orphans', 'The persecuted church', 'The sick & suffering', 'The lost'],
+  },
+  {
+    tab: 'Teachings',
+    icon: '📖',
+    color: 'rgba(0,50,80,0.5)',
+    desc: 'The Church Fathers library. Tap any category to read quotes and reflections from saints of the faith.',
+    items: ['Church Fathers — Chrysostom, Augustine, Athanasius & more', 'Desert Fathers — wisdom from the wilderness', 'Desert Mothers — Amma Syncletica, Sarah, Theodora', 'Didache — Teaching of the Twelve Apostles'],
+  },
+  {
+    tab: 'Christ Is King',
+    icon: '👑',
+    color: 'rgba(80,40,0,0.5)',
+    desc: 'Three sections from the Ethiopian Orthodox canon. Tap any tile to explore.',
+    items: [
+      'Teachings of Jesus — 12 themes, 38+ red-letter passages. Tap a theme → tap Prev/Next to read through',
+      'Book of Enoch — Tap a book → tap a chapter → read with Prev/Next',
+      'Ethiopian Bible — 88 books in 3 parts. Tap a part → tap a book → tap a chapter number',
+    ],
+  },
+  {
+    tab: 'Golden Net',
+    icon: '🕸️',
+    color: 'rgba(20,0,80,0.5)',
+    desc: 'The global prayer network visualization — see the body of Christ connected across continents.',
+    items: ['Live animated prayer network map', 'Three pillars: Agreement, Unity, Authority', 'Tap "Join the Net" to connect your prayers'],
+  },
+]
 
 export default function HomeScreen() {
   const { count, increment } = usePrayerCounter()
@@ -15,7 +70,20 @@ export default function HomeScreen() {
   const [selectedCat, setSelectedCat] = useState<PrayerCategory>('war')
   const [prayerText, setPrayerText] = useState('')
   const [isAnon, setIsAnon] = useState(true)
+  const [showInstallBanner, setShowInstallBanner] = useState(false)
+  const [showGuide, setShowGuide] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  useEffect(() => {
+    if (isStandalone) return
+    const dismissed = localStorage.getItem('install-banner-dismissed')
+    if (!dismissed) setShowInstallBanner(true)
+  }, [])
+
+  function dismissBanner() {
+    setShowInstallBanner(false)
+    localStorage.setItem('install-banner-dismissed', '1')
+  }
 
   function handlePray(id: string) {
     increment()
@@ -123,6 +191,48 @@ export default function HomeScreen() {
           </div>
         </div>
 
+        {/* ── INSTALL BANNER ───────────────── */}
+        <AnimatePresence>
+          {showInstallBanner && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+              className="mx-4 mt-3 rounded overflow-hidden"
+              style={{ background: 'linear-gradient(135deg,rgba(10,20,60,0.95),rgba(5,10,30,0.98))', border: '1px solid rgba(201,168,76,0.4)', boxShadow: '0 4px 20px rgba(0,0,0,0.6)' }}>
+              <div className="p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-1">
+                    <span style={{ fontSize: 20, flexShrink: 0 }}>📲</span>
+                    <div>
+                      <div className="font-heading uppercase text-gold mb-0.5" style={{ fontSize: '7.5px', letterSpacing: '0.4em', opacity: 0.9 }}>Add Theosis to Your Home Screen</div>
+                      <p className="font-body italic text-parchment" style={{ fontSize: '11px', opacity: 0.7, lineHeight: 1.5 }}>
+                        {isIOS
+                          ? 'Tap the Share button (↑) at the bottom of Safari, then tap "Add to Home Screen"'
+                          : isAndroid
+                          ? 'Tap the ⋮ menu in Chrome and select "Add to Home screen"'
+                          : 'Open in Chrome or Safari and use the menu to "Add to Home Screen" or "Install App"'}
+                      </p>
+                    </div>
+                  </div>
+                  <button onClick={dismissBanner}
+                    className="font-heading text-gold flex-shrink-0 mt-0.5"
+                    style={{ fontSize: '16px', opacity: 0.5, background: 'none', border: 'none', cursor: 'pointer', lineHeight: 1 }}>
+                    ×
+                  </button>
+                </div>
+                {isIOS && (
+                  <div className="flex items-center gap-3 mt-2 pt-2" style={{ borderTop: '1px solid rgba(201,168,76,0.15)' }}>
+                    {['1. Tap ↑ Share', '2. Scroll down', '3. Add to Home Screen'].map((step, i) => (
+                      <div key={i} className="flex-1 text-center py-1 rounded"
+                        style={{ background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.15)' }}>
+                        <span className="font-heading text-gold" style={{ fontSize: '7px', letterSpacing: '0.2em', opacity: 0.7 }}>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ── COUNTER BAND ─────────────────── */}
         <div className="flex items-center justify-center gap-3 px-5 py-3" style={{ background: 'linear-gradient(90deg,#1a237e 0%,#1e2d7a 50%,#1a237e 100%)', borderTop: '1px solid rgba(201,168,76,0.4)', borderBottom: '1px solid rgba(201,168,76,0.4)', boxShadow: 'inset 0 1px 0 rgba(201,168,76,0.15),0 4px 20px rgba(0,0,0,0.5)' }}>
           <span className="text-gold" style={{ fontSize: '10px', opacity: 0.6 }}>✦</span>
@@ -159,6 +269,22 @@ export default function HomeScreen() {
           <span className="font-heading uppercase text-parchment" style={{ fontSize: '9px', letterSpacing: '0.35em', opacity: 0.45 }}>This is not a wellness app.</span>
           <span className="font-body italic text-gold-light" style={{ fontSize: '13px', opacity: 0.8, textShadow: '0 0 18px rgba(201,168,76,0.35)' }}>This is a digital sacred space.</span>
           <span className="absolute top-1/2 right-3.5 -translate-y-1/2 text-gold" style={{ fontSize: '9px', opacity: 0.3 }}>✦</span>
+        </div>
+
+        {/* ── APP GUIDE CARD ───────────────── */}
+        <div className="px-4 mb-4">
+          <motion.button whileTap={{ scale: 0.98 }} onClick={() => setShowGuide(true)}
+            className="w-full text-left rounded flex items-center gap-4 px-4 py-3"
+            style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.2)', boxShadow: '0 2px 12px rgba(0,0,0,0.3)' }}>
+            <span style={{ fontSize: 20, flexShrink: 0, opacity: 0.85 }}>🗺️</span>
+            <div className="flex-1">
+              <div className="font-display text-gold-light" style={{ fontSize: '13px' }}>How to Use Theosis</div>
+              <div className="font-body italic text-parchment" style={{ fontSize: '11px', opacity: 0.55, lineHeight: 1.4 }}>
+                Guide to all 6 tabs · what's where · how to navigate
+              </div>
+            </div>
+            <span style={{ color: 'rgba(201,168,76,0.5)', fontSize: 14, flexShrink: 0 }}>›</span>
+          </motion.button>
         </div>
 
         {/* ── OFFER A PRAYER ───────────────── */}
@@ -217,6 +343,82 @@ export default function HomeScreen() {
         style={{ bottom: '96px', right: '20px', width: '56px', height: '56px', fontSize: '26px', color: '#0a0b12', background: 'radial-gradient(circle,#e8c96b,#c9a84c,#8a6c20)', border: 'none', boxShadow: '0 4px 20px rgba(201,168,76,0.5),0 0 40px rgba(201,168,76,0.2),0 2px 6px rgba(0,0,0,0.6)' }}>
         ⊕
       </button>
+
+      {/* ── APP GUIDE MODAL ──────────────── */}
+      <AnimatePresence>
+        {showGuide && (
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[150]" style={{ background: 'rgba(0,0,0,0.8)' }}
+              onClick={() => setShowGuide(false)} />
+            <motion.div initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 280 }}
+              className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-[160] rounded-t-2xl overflow-hidden"
+              style={{ background: 'linear-gradient(180deg,#0e0f1e 0%,#0a0b14 100%)', borderTop: '1px solid rgba(201,168,76,0.35)', maxHeight: '88vh' }}>
+              <div className="overflow-y-auto pb-10" style={{ maxHeight: '88vh' }}>
+                <div className="sticky top-0 z-10 px-5 pt-5 pb-3"
+                  style={{ background: 'linear-gradient(180deg,#0e0f1e 80%,transparent 100%)' }}>
+                  <div className="w-9 h-[3px] rounded mx-auto mb-4" style={{ background: 'rgba(201,168,76,0.3)' }} />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-display text-gold-light" style={{ fontSize: '18px', textShadow: '0 0 16px rgba(201,168,76,0.4)' }}>How to Use Theosis</div>
+                      <div className="font-body italic text-parchment mt-1" style={{ fontSize: '11px', opacity: 0.5 }}>6 tabs · tap each tab to explore</div>
+                    </div>
+                    <button onClick={() => setShowGuide(false)}
+                      className="font-heading text-gold"
+                      style={{ fontSize: '20px', opacity: 0.5, background: 'none', border: 'none', cursor: 'pointer' }}>
+                      ×
+                    </button>
+                  </div>
+                  <div className="h-px mt-3 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+                </div>
+
+                <div className="px-4 pt-1 pb-4 flex flex-col gap-3">
+                  {GUIDE_SECTIONS.map((section) => (
+                    <div key={section.tab} className="rounded overflow-hidden"
+                      style={{ border: '1px solid rgba(201,168,76,0.18)' }}>
+                      <div className="flex items-center gap-3 px-4 py-3"
+                        style={{ background: `linear-gradient(135deg,${section.color},rgba(5,8,20,0.95))` }}>
+                        <span style={{ fontSize: 22, flexShrink: 0 }}>{section.icon}</span>
+                        <div>
+                          <div className="font-display text-gold-light" style={{ fontSize: '14px' }}>{section.tab}</div>
+                          <span className="font-heading uppercase text-gold" style={{ fontSize: '6.5px', letterSpacing: '0.35em', opacity: 0.55 }}>
+                            {section.tab === 'The Eucharist' || section.tab === 'Stations' ? 'Coming Soon' : 'Available Now'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="px-4 py-3" style={{ background: 'rgba(5,8,20,0.7)' }}>
+                        <p className="font-body italic text-parchment mb-2" style={{ fontSize: '12px', opacity: 0.65, lineHeight: 1.6 }}>{section.desc}</p>
+                        <div className="flex flex-col gap-1">
+                          {section.items.map((item, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                              <span className="text-gold flex-shrink-0 mt-0.5" style={{ fontSize: '8px', opacity: 0.5 }}>✦</span>
+                              <span className="font-body text-parchment" style={{ fontSize: '11.5px', opacity: 0.7, lineHeight: 1.55 }}>{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Install tip at bottom of guide */}
+                  {!isStandalone && (
+                    <div className="rounded p-4 mt-1"
+                      style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.2)' }}>
+                      <div className="font-heading uppercase text-gold mb-2" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.8 }}>📲 Save to Home Screen</div>
+                      <p className="font-body italic text-parchment" style={{ fontSize: '11.5px', opacity: 0.65, lineHeight: 1.6 }}>
+                        {isIOS
+                          ? 'In Safari: tap the Share (↑) button at the bottom, scroll down, and tap "Add to Home Screen." Theosis will open like a native app.'
+                          : 'In Chrome: tap the ⋮ menu and select "Add to Home screen." Theosis will open like a native app — no App Store required.'}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ── ADD PRAYER MODAL ─────────────── */}
       <AnimatePresence>

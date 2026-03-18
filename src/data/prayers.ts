@@ -23,7 +23,7 @@ export const MOCK_PRAYERS: PrayerRequest[] = [
   {
     id: '1',
     category: 'war',
-    body: "Pray for the children of Ukraine and Gaza who have lost everything — their homes, their fathers, their innocence. May the Lord of Hosts be their shield and refuge.",
+    body: "Pray for the children of Iran and Gaza who have lost everything — their homes, their fathers, their innocence. May the Lord of Hosts be their shield and refuge.",
     author: 'Anonymous',
     prayCount: 4721,
     createdAt: '3 min ago',

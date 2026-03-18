@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import BottomNav from './components/layout/BottomNav'
 import type { TabId } from './components/layout/BottomNav'
 import HomeScreen from './screens/HomeScreen'
+import FathersScreen from './screens/FathersScreen'
 import ComingSoonScreen from './screens/ComingSoonScreen'
 
 const SCREENS: Record<TabId, React.ReactNode> = {
@@ -21,14 +22,7 @@ const SCREENS: Record<TabId, React.ReactNode> = {
       description="Seven immersive intercession stations — War, Trafficking, Widows, the Sick, the Lost, the Persecuted. Full-screen sacred art, ambient music, guided prayers."
     />
   ),
-  office: (
-    <ComingSoonScreen
-      icon="📖"
-      title="Daily Office"
-      description="Morning Lauds, Evening Vespers, Night Compline. Personal prayer streaks, journal, Scripture of the Day. Voice of the Fathers library — 300 sayings from the Patristic tradition."
-      phase="In Development"
-    />
-  ),
+  office: <FathersScreen />,
   rose: (
     <ComingSoonScreen
       icon="🌹"

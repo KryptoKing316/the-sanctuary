@@ -321,7 +321,7 @@ function ReaderScreen({ cat, index, onBack }: { cat: Category; index: number; on
       </div>
 
       {/* Actions */}
-      <div className="flex-shrink-0 px-5 pb-6 pt-2 flex flex-col gap-3">
+      <div className="flex-shrink-0 px-5 pb-24 pt-2 flex flex-col gap-3">
         {/* Pray through this */}
         <button onClick={() => setMeditating(true)}
           className="w-full py-3 rounded font-heading uppercase text-gold"
@@ -452,7 +452,7 @@ function DidacheReaderScreen({ section, onBack }: { section: DidacheSection; onB
         </AnimatePresence>
       </div>
 
-      <div className="flex-shrink-0 px-5 pb-6 pt-2 flex gap-3">
+      <div className="flex-shrink-0 px-5 pb-24 pt-2 flex gap-3">
         <button disabled={idx === 0} onClick={() => setIdx(i => i - 1)}
           className="flex-1 py-2 rounded font-heading uppercase text-gold"
           style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)', opacity: idx === 0 ? 0.3 : 1 }}>

@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cobalt:    #1a237e;
+  --crimson:   #7f0000;
+  --gold:      #c9a84c;
+  --gold-lt:   #e8c96b;
+  --gold-dk:   #8a6c20;
+  --ivory:     #f5f0e8;
+  --parchment: #d4c5a0;
+  --stone:     #0d0e1a;
+  --stone-mid: #12141f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  background: var(--stone);
+  color: var(--ivory);
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Lora', serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--stone); }
+::-webkit-scrollbar-thumb { background: var(--gold-dk); border-radius: 2px; }
+
+/* Safe area */
+.pb-safe { padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom))); }
+
+/* Drop cap */
+.drop-cap::first-letter {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 3em;
+  font-weight: 700;
+  color: var(--gold-lt);
+  float: left;
+  line-height: 0.75;
+  margin-right: 4px;
+  margin-top: 4px;
+  text-shadow: 0 0 20px rgba(201,168,76,0.7);
+}
+
+/* Animations */
+@keyframes divineBreath {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 1;   transform: translateX(-50%) scale(1.12); }
+}
+@keyframes counterPulse {
+  0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,0.6); }
+  50%       { text-shadow: 0 0 35px rgba(201,168,76,0.95), 0 0 60px rgba(201,168,76,0.4); }
+}
+@keyframes liveBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes fabGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(201,168,76,0.5), 0 0 40px rgba(201,168,76,0.2); }
+  50%       { box-shadow: 0 4px 30px rgba(201,168,76,0.75), 0 0 60px rgba(201,168,76,0.35); }
+}
+@keyframes roseSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes rosePulse {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  33%     { transform: scale(1.06) rotate(4deg); }
+  66%     { transform: scale(0.97) rotate(-3deg); }
+}
+@keyframes candleFlicker {
+  0%,100% { opacity: 0.8; }
+  30%     { opacity: 1; }
+  60%     { opacity: 0.7; }
+}
+@keyframes particleRise {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-120px) scale(0.3); }
+}
+
+.animate-divine-breath  { animation: divineBreath 5s ease-in-out infinite; }
+.animate-counter-pulse  { animation: counterPulse 2s ease-in-out infinite; }
+.animate-live-blink     { animation: liveBlink 1.5s ease-in-out infinite; }
+.animate-fab-glow       { animation: fabGlow 2.5s ease-in-out infinite; }
+.animate-rose-spin      { animation: roseSpin 60s linear infinite; }
+.animate-rose-pulse     { animation: rosePulse 6s ease-in-out infinite; }
+.animate-candle-flicker { animation: candleFlicker 3.5s ease-in-out infinite; }

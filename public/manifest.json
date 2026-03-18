@@ -1,0 +1,26 @@
+{
+  "name": "The Sanctuary",
+  "short_name": "Sanctuary",
+  "description": "Global Orthodox & Catholic prayer — millions praying as one",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0e1a",
+  "theme_color": "#0d0e1a",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "religion", "social"],
+  "lang": "en"
+}

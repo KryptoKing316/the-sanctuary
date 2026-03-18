@@ -8,7 +8,7 @@ import {
 } from '../data/scripture'
 import type { ScripturePassage } from '../data/scripture'
 
-type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-chapters' | 'enoch-reader' | 'bible-parts' | 'bible-books' | 'bible-chapters'
+type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-chapters' | 'enoch-reader' | 'bible-parts' | 'bible-books' | 'bible-chapters' | 'bible-chapter-reader'
 
 // Chapter counts for all 88 Ethiopian Bible books
 const CHAPTER_COUNTS: Record<string, number> = {
@@ -592,37 +592,104 @@ function BibleBooksView({ partIdx, onBack, onBook }: { partIdx: number; onBack: 
 }
 
 // ── BIBLE CHAPTERS VIEW ───────────────────────────────────────
-function BibleChaptersView({ book, onBack }: { book: string; onBack: () => void }) {
+function BibleChaptersView({ book, onBack, onChapter }: { book: string; onBack: () => void; onChapter: (ch: number) => void }) {
   const chapterCount = CHAPTER_COUNTS[book] ?? 0
   const chapters = Array.from({ length: chapterCount }, (_, i) => i + 1)
-  const shortName = book.replace(/^The (Book of( the Prophet)?|Gospel of|Letter (of|to( the)?)|First |Second |Third |Acts of the |Lamentations (of|the Prophet)|Martyrdom and Ascension of)\s*/i, '').trim()
 
   return (
     <div className="flex flex-col h-full"
       style={{ background: 'linear-gradient(180deg,#060a08 0%,#080910 100%)' }}>
       <div className="flex-shrink-0 pt-12 px-5 pb-0">
-        <button onClick={onBack} className="flex items-center gap-2 mb-4 font-heading uppercase text-gold" style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+        <button onClick={onBack} className="flex items-center gap-2 mb-4 font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
           ‹ Back
         </button>
         <h2 className="font-display text-gold-light mb-1" style={{ fontSize: '18px', textShadow: '0 0 16px rgba(201,168,76,0.4)', lineHeight: 1.2 }}>{book}</h2>
-        <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em', opacity: 0.45 }}>{chapterCount} chapters · Ethiopian Orthodox Canon</span>
+        <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em', opacity: 0.45 }}>
+          {chapterCount} chapters · Ethiopian Orthodox Canon · Tap a chapter to read
+        </span>
         <div className="h-px mt-3 mb-3 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
       </div>
       <div className="flex-1 overflow-y-auto px-4 pb-24 pt-1">
         <div className="grid grid-cols-4 gap-2">
           {chapters.map(ch => (
-            <div key={ch} className="flex items-center justify-center py-3 rounded"
-              style={{ background: 'rgba(201,168,76,0.06)', border: '1px solid rgba(201,168,76,0.14)' }}>
-              <span className="font-heading text-gold" style={{ fontSize: '13px', opacity: 0.8 }}>{ch}</span>
-            </div>
+            <motion.button key={ch} whileTap={{ scale: 0.92 }} onClick={() => onChapter(ch)}
+              className="flex items-center justify-center py-4 rounded"
+              style={{ background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.2)', cursor: 'pointer' }}>
+              <span className="font-heading text-gold" style={{ fontSize: '15px', opacity: 0.9 }}>{ch}</span>
+            </motion.button>
           ))}
         </div>
-        <div className="mt-6 p-4 rounded text-center" style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.12)' }}>
-          <span className="block font-heading uppercase text-gold mb-2" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.6 }}>Full Text — Phase 2</span>
-          <p className="font-body italic text-parchment" style={{ fontSize: '12px', opacity: 0.5, lineHeight: 1.6 }}>
-            Complete chapter-by-chapter text of {shortName} from the Ethiopian Orthodox canon is coming in the next phase of Theosis.
-          </p>
+      </div>
+    </div>
+  )
+}
+
+// ── BIBLE CHAPTER READER ──────────────────────────────────────
+function BibleChapterReaderView({ book, chapter, totalChapters, onBack, onChapter }: {
+  book: string; chapter: number; totalChapters: number
+  onBack: () => void; onChapter: (ch: number) => void
+}) {
+  const shortName = book.replace(/^(The )?(Book of( the Prophet)?|Gospel of|Letter (of|to( the)?)|First |Second |Third |Acts of the |Lamentations (of|the Prophet)|Martyrdom and Ascension of)\s*/i, '').trim()
+
+  return (
+    <div className="flex flex-col h-full"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(0,60,30,0.4) 0%, transparent 55%), linear-gradient(180deg,#050e08 0%,#080910 100%)' }}>
+
+      {/* Header */}
+      <div className="flex-shrink-0 pt-12 px-5 pb-0">
+        <button onClick={onBack} className="flex items-center gap-2 mb-3 font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+          ‹ {shortName}
+        </button>
+        <div className="flex justify-between mb-2">
+          <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.5 }}>Chapter {chapter} of {totalChapters}</span>
+          <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.5 }}>Ethiopian Orthodox</span>
         </div>
+        <div className="h-px mb-4 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-6 pb-4">
+        <AnimatePresence mode="wait">
+          <motion.div key={chapter} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+            <h3 className="font-display text-gold-light mb-6 text-center"
+              style={{ fontSize: '22px', textShadow: '0 0 24px rgba(201,168,76,0.5)', lineHeight: 1.2 }}>
+              {book}
+            </h3>
+            <div className="flex items-center justify-center mb-6">
+              <div className="flex items-center justify-center rounded-full"
+                style={{ width: 64, height: 64, background: 'radial-gradient(circle,rgba(201,168,76,0.15),rgba(201,168,76,0.03))', border: '1px solid rgba(201,168,76,0.3)' }}>
+                <span className="font-display text-gold" style={{ fontSize: '24px', opacity: 0.9 }}>{chapter}</span>
+              </div>
+            </div>
+            <div className="p-5 rounded text-center mb-4" style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.15)' }}>
+              <span className="block font-heading uppercase text-gold mb-3" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.6 }}>Full Text — Coming in Phase 2</span>
+              <p className="font-body italic text-parchment" style={{ fontSize: '13px', opacity: 0.6, lineHeight: 1.7 }}>
+                The complete text of {shortName} Chapter {chapter} from the Ethiopian Orthodox canon will be available in the next phase of Theosis.
+              </p>
+              <p className="font-body italic text-parchment mt-3" style={{ fontSize: '11.5px', opacity: 0.4, lineHeight: 1.6 }}>
+                Use Prev and Next below to browse all {totalChapters} chapters.
+              </p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Prev / Next */}
+      <div className="flex-shrink-0 px-5 pb-24 pt-2 flex gap-3">
+        <motion.button whileTap={{ scale: 0.97 }}
+          disabled={chapter === 1} onClick={() => onChapter(chapter - 1)}
+          className="flex-1 py-3 rounded font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)', opacity: chapter === 1 ? 0.3 : 1 }}>
+          ‹ Prev Chapter
+        </motion.button>
+        <motion.button whileTap={{ scale: 0.97 }}
+          disabled={chapter === totalChapters} onClick={() => onChapter(chapter + 1)}
+          className="flex-1 py-3 rounded font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.3em', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(201,168,76,0.2)', opacity: chapter === totalChapters ? 0.3 : 1 }}>
+          Next Chapter ›
+        </motion.button>
       </div>
     </div>
   )
@@ -637,6 +704,7 @@ export default function ChristScreen() {
   const [enochChapter, setEnochChapter] = useState(0) // 0 = all chapters in book
   const [biblePartIdx, setBiblePartIdx] = useState(0)
   const [selectedBook, setSelectedBook] = useState('')
+  const [selectedChapter, setSelectedChapter] = useState(1)
 
   const christPassages = christTheme === '__all__'
     ? JESUS_TEACHINGS
@@ -738,7 +806,23 @@ export default function ChristScreen() {
         {view === 'bible-chapters' && (
           <motion.div key="bible-chapters" className="absolute inset-0"
             initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-            <BibleChaptersView book={selectedBook} onBack={() => setView('bible-books')} />
+            <BibleChaptersView
+              book={selectedBook}
+              onBack={() => setView('bible-books')}
+              onChapter={(ch) => { setSelectedChapter(ch); setView('bible-chapter-reader') }}
+            />
+          </motion.div>
+        )}
+        {view === 'bible-chapter-reader' && (
+          <motion.div key="bible-chapter-reader" className="absolute inset-0"
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+            <BibleChapterReaderView
+              book={selectedBook}
+              chapter={selectedChapter}
+              totalChapters={CHAPTER_COUNTS[selectedBook] ?? 1}
+              onBack={() => setView('bible-chapters')}
+              onChapter={(ch) => setSelectedChapter(ch)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

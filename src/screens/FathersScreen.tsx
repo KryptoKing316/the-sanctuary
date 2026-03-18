@@ -434,26 +434,32 @@ function DidacheReaderScreen({ section, onBack }: { section: DidacheSection; onB
         <div className="h-px mb-3 opacity-25" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6 pb-4">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center px-5 py-2">
         <AnimatePresence mode="wait">
-          <motion.div key={idx} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+          <motion.div key={idx} className="flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+
             {p.heading && (
               <span className="font-heading uppercase text-gold block mb-3" style={{ fontSize: '8px', letterSpacing: '0.45em', opacity: 0.7 }}>{p.heading}</span>
             )}
-            <p className="font-body text-ivory mb-5" style={{ fontSize: '15.5px', lineHeight: 1.85 }}>
-              <span className="font-display text-gold float-left mr-2" style={{ fontSize: '60px', lineHeight: 0.82, marginTop: 6, textShadow: '0 0 24px rgba(201,168,76,0.7)' }}>
-                {p.text[0]}
-              </span>
-              <span style={{ fontStyle: 'italic', opacity: 0.9 }}>{p.text.slice(1)}</span>
+
+            <span className="font-display text-gold leading-none mb-3 select-none"
+              style={{ fontSize: '72px', lineHeight: 0.75, opacity: 0.18, textShadow: '0 0 30px rgba(201,168,76,0.6)' }}>❝</span>
+
+            <p className="font-body italic text-ivory"
+              style={{ fontSize: '20px', lineHeight: 1.9, opacity: 0.95, maxWidth: '320px', textShadow: '0 1px 8px rgba(0,0,0,0.6)' }}>
+              {p.text}
             </p>
-            <div className="flex items-center gap-3 mt-2 mb-3 opacity-60">
-              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.4),transparent)' }} />
-              <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.35em' }}>{section.title}</span>
-              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.4))' }} />
+
+            <div className="flex items-center gap-3 mt-6 w-full opacity-65">
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(201,168,76,0.5))' }} />
+              <span className="font-heading uppercase text-gold flex-shrink-0" style={{ fontSize: '8px', letterSpacing: '0.4em' }}>{section.title}</span>
+              <div className="flex-1 h-px" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.5),transparent)' }} />
             </div>
+
             {p.scripture && (
-              <div className="p-3 rounded" style={{ background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.18)' }}>
-                <p className="font-body italic text-gold-light text-center" style={{ fontSize: '11px', lineHeight: 1.6, opacity: 0.8 }}>{p.scripture}</p>
+              <div className="mt-4 px-4 py-3 rounded w-full" style={{ background: 'rgba(201,168,76,0.07)', border: '1px solid rgba(201,168,76,0.18)' }}>
+                <p className="font-body italic text-gold-light" style={{ fontSize: '13px', lineHeight: 1.65, opacity: 0.8 }}>{p.scripture}</p>
               </div>
             )}
           </motion.div>

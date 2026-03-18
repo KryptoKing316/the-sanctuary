@@ -655,26 +655,30 @@ function BibleChapterReaderView({ book, chapter, totalChapters, onBack, onChapte
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 pb-4">
+      <div className="flex-1 overflow-y-auto flex flex-col justify-center px-5 py-2">
         <AnimatePresence mode="wait">
-          <motion.div key={chapter} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
-            <h3 className="font-display text-gold-light mb-6 text-center"
+          <motion.div key={chapter} className="flex flex-col items-center text-center"
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+
+            <h3 className="font-display text-gold-light mb-4"
               style={{ fontSize: '22px', textShadow: '0 0 24px rgba(201,168,76,0.5)', lineHeight: 1.2 }}>
               {book}
             </h3>
-            <div className="flex items-center justify-center mb-6">
+
+            <div className="flex items-center justify-center mb-5">
               <div className="flex items-center justify-center rounded-full"
-                style={{ width: 64, height: 64, background: 'radial-gradient(circle,rgba(201,168,76,0.15),rgba(201,168,76,0.03))', border: '1px solid rgba(201,168,76,0.3)' }}>
-                <span className="font-display text-gold" style={{ fontSize: '24px', opacity: 0.9 }}>{chapter}</span>
+                style={{ width: 72, height: 72, background: 'radial-gradient(circle,rgba(201,168,76,0.15),rgba(201,168,76,0.03))', border: '1px solid rgba(201,168,76,0.3)' }}>
+                <span className="font-display text-gold" style={{ fontSize: '28px', opacity: 0.9 }}>{chapter}</span>
               </div>
             </div>
-            <div className="p-5 rounded text-center mb-4" style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.15)' }}>
+
+            <div className="px-4 py-4 rounded w-full" style={{ background: 'rgba(201,168,76,0.05)', border: '1px solid rgba(201,168,76,0.15)' }}>
               <span className="block font-heading uppercase text-gold mb-3" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.6 }}>Full Text — Coming in Phase 2</span>
-              <p className="font-body italic text-parchment" style={{ fontSize: '13px', opacity: 0.6, lineHeight: 1.7 }}>
-                The complete text of {shortName} Chapter {chapter} from the Ethiopian Orthodox canon will be available in the next phase of Theosis.
+              <p className="font-body italic text-parchment" style={{ fontSize: '18px', opacity: 0.7, lineHeight: 1.8 }}>
+                The complete text of {shortName} Chapter {chapter} from the Ethiopian Orthodox canon is coming in the next phase of Theosis.
               </p>
-              <p className="font-body italic text-parchment mt-3" style={{ fontSize: '11.5px', opacity: 0.4, lineHeight: 1.6 }}>
-                Use Prev and Next below to browse all {totalChapters} chapters.
+              <p className="font-body italic text-parchment mt-3" style={{ fontSize: '12px', opacity: 0.35, lineHeight: 1.6 }}>
+                Use Prev / Next to browse all {totalChapters} chapters.
               </p>
             </div>
           </motion.div>

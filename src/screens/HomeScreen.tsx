@@ -340,7 +340,7 @@ export default function HomeScreen() {
       {/* ── FAB ──────────────────────────── */}
       <button onClick={() => setShowModal(true)}
         className="fixed z-50 flex items-center justify-center rounded-full font-bold cursor-pointer animate-fab-glow"
-        style={{ bottom: '128px', right: '20px', width: '56px', height: '56px', fontSize: '26px', color: '#0a0b12', background: 'radial-gradient(circle,#e8c96b,#c9a84c,#8a6c20)', border: 'none', boxShadow: '0 4px 20px rgba(201,168,76,0.5),0 0 40px rgba(201,168,76,0.2),0 2px 6px rgba(0,0,0,0.6)' }}>
+        style={{ bottom: '160px', right: '20px', width: '56px', height: '56px', fontSize: '26px', color: '#0a0b12', background: 'radial-gradient(circle,#e8c96b,#c9a84c,#8a6c20)', border: 'none', boxShadow: '0 4px 20px rgba(201,168,76,0.5),0 0 40px rgba(201,168,76,0.2),0 2px 6px rgba(0,0,0,0.6)' }}>
         ⊕
       </button>
 

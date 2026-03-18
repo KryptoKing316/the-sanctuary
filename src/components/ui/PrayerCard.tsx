@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { PrayerRequest, CATEGORY_META } from '../../data/prayers'
+import type { PrayerRequest } from '../../data/prayers'
+import { CATEGORY_META } from '../../data/prayers'
 
 const CARD_THEMES: Record<string, string> = {
   'theme-war':         'linear-gradient(135deg,rgba(127,0,0,0.55) 0%,rgba(40,10,10,0.9) 60%,rgba(20,10,30,0.95) 100%)',

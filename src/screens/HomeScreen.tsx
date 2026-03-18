@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import PrayerCard from '../components/ui/PrayerCard'
 import { usePrayerCounter, formatCount } from '../hooks/usePrayerCounter'
 import { useParticles } from '../hooks/useParticles'
-import { MOCK_PRAYERS, PrayerRequest, PrayerCategory, CATEGORY_META } from '../data/prayers'
+import type { PrayerRequest, PrayerCategory } from '../data/prayers'
+import { MOCK_PRAYERS, CATEGORY_META } from '../data/prayers'
 
 export default function HomeScreen() {
   const { count, increment } = usePrayerCounter()

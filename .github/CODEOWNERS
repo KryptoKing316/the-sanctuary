@@ -1,0 +1,15 @@
+# CODEOWNERS — The Sanctuary
+# KryptoKing316 must approve every PR before it can merge.
+# This file tells GitHub who owns what. Nobody merges to main without sign-off.
+
+# All files — Eric is the default owner
+* @KryptoKing316
+
+# Theology and liturgy are guarded — Tier 3, Eric personally reviews
+/src/theology/  @KryptoKing316
+/src/liturgy/   @KryptoKing316
+/src/content/   @KryptoKing316
+
+# CLAUDE.md and governance docs require lead maintainer approval
+CLAUDE.md       @KryptoKing316
+CODEOWNERS      @KryptoKing316

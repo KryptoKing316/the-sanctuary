@@ -8,7 +8,7 @@ import {
 } from '../data/scripture'
 import type { ScripturePassage } from '../data/scripture'
 
-type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-reader' | 'bible-parts' | 'bible-books' | 'bible-chapters'
+type View = 'home' | 'christ-themes' | 'christ-reader' | 'enoch-books' | 'enoch-chapters' | 'enoch-reader' | 'bible-parts' | 'bible-books' | 'bible-chapters'
 
 // Chapter counts for all 88 Ethiopian Bible books
 const CHAPTER_COUNTS: Record<string, number> = {
@@ -53,6 +53,25 @@ const CHAPTER_COUNTS: Record<string, number> = {
   'The Testament of Abraham': 20, 'The Testament of Isaac': 8, 'The Testament of Jacob': 7,
   'The Psalms of Solomon': 18, 'The Didache': 16,
   'The Apocalypse of Peter': 17, 'The Martyrdom and Ascension of Isaiah': 11,
+}
+
+// ── Enoch passage helpers ──────────────────────────────────────
+function getBookPassages(bookIndex: number): ScripturePassage[] {
+  const bookNum = bookIndex + 1
+  return BOOK_OF_ENOCH_PASSAGES.filter(p => p.reference.includes(`Book ${bookNum}`))
+}
+
+function getChapterPassages(bookIndex: number, chapterNum: number): ScripturePassage[] {
+  const bookNum = bookIndex + 1
+  const bookPassages = getBookPassages(bookIndex)
+  if (bookNum === 1) {
+    return bookPassages.filter(p => p.reference.includes(`Ch. ${chapterNum})`))
+  }
+  if (bookNum === 2) {
+    return bookPassages.filter(p => p.reference.includes(`Parable ${chapterNum}:`))
+  }
+  // Books 3–5: chapter-level distinction not in data — return all book passages
+  return bookPassages
 }
 
 const CHRIST_THEMES: { id: string; label: string; icon: string; desc: string }[] = [
@@ -421,6 +440,77 @@ function EnochBooksView({ onBack, onBook }: { onBack: () => void; onBook: (bookT
   )
 }
 
+// ── ENOCH CHAPTERS LIST ───────────────────────────────────────
+function EnochChaptersView({ bookIndex, onBack, onChapter }: {
+  bookIndex: number
+  onBack: () => void
+  onChapter: (chapterNum: number) => void  // 0 = all passages in book
+}) {
+  const book = BOOK_OF_ENOCH_STRUCTURE[bookIndex]
+  const bookPassages = getBookPassages(bookIndex)
+
+  return (
+    <div className="flex flex-col h-full"
+      style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(26,35,126,0.5) 0%, transparent 55%), linear-gradient(180deg,#08090e 0%,#080910 100%)' }}>
+      <div className="flex-shrink-0 pt-12 px-5 pb-0">
+        <button onClick={onBack} className="flex items-center gap-2 mb-4 font-heading uppercase text-gold"
+          style={{ fontSize: '8px', letterSpacing: '0.4em', opacity: 0.75, background: 'none', border: 'none', cursor: 'pointer' }}>
+          ‹ Book of Enoch
+        </button>
+        <div className="flex items-center gap-2 mb-1">
+          <span style={{ fontSize: 22 }}>📜</span>
+          <h2 className="font-display text-gold-light" style={{ fontSize: '17px', textShadow: '0 0 20px rgba(201,168,76,0.5)' }}>{book.title}</h2>
+        </div>
+        <span className="font-heading uppercase text-gold" style={{ fontSize: '7px', letterSpacing: '0.4em', opacity: 0.5 }}>
+          Book {book.book} · {book.chapters.length} chapters
+        </span>
+        <div className="h-px mt-3 mb-3 opacity-30" style={{ background: 'linear-gradient(90deg,rgba(201,168,76,0.6),transparent)' }} />
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-4 pb-24">
+        {/* All passages shortcut */}
+        <motion.button whileTap={{ scale: 0.985 }}
+          onClick={() => onChapter(0)}
+          className="w-full text-left mb-4 p-4 rounded flex items-center gap-4"
+          style={{ background: 'rgba(201,168,76,0.08)', border: '1px solid rgba(201,168,76,0.28)' }}>
+          <span style={{ fontSize: 22, flexShrink: 0 }}>📋</span>
+          <div className="flex-1">
+            <div className="font-display text-gold-light mb-1" style={{ fontSize: '13px' }}>All Passages — Book {book.book}</div>
+            <span className="font-heading uppercase text-gold mt-1 block" style={{ fontSize: '7px', letterSpacing: '0.3em', opacity: 0.5 }}>
+              {bookPassages.length} passages · read in order
+            </span>
+          </div>
+          <span style={{ color: 'rgba(201,168,76,0.5)', fontSize: 14, flexShrink: 0 }}>›</span>
+        </motion.button>
+
+        {/* Chapter list */}
+        {book.chapters.map(ch => {
+          const chPassages = getChapterPassages(bookIndex, ch.chapter)
+          const hasContent = chPassages.length > 0
+          return (
+            <motion.button key={ch.chapter} whileTap={{ scale: 0.985 }}
+              onClick={() => onChapter(ch.chapter)}
+              className="w-full text-left mb-2 p-4 rounded flex items-center gap-4"
+              style={{ background: hasContent ? 'rgba(26,35,126,0.18)' : 'rgba(0,0,0,0.2)', border: `1px solid ${hasContent ? 'rgba(100,120,255,0.25)' : 'rgba(201,168,76,0.1)'}` }}>
+              <div className="flex items-center justify-center rounded-full flex-shrink-0"
+                style={{ width: 32, height: 32, background: 'rgba(26,35,126,0.4)', border: '1px solid rgba(100,120,255,0.3)' }}>
+                <span className="font-heading text-gold" style={{ fontSize: '10px' }}>{ch.chapter}</span>
+              </div>
+              <div className="flex-1">
+                <div className="font-body italic text-parchment" style={{ fontSize: '13px', opacity: 0.85, lineHeight: 1.35 }}>{ch.title}</div>
+                <span className="font-heading uppercase text-gold mt-1 block" style={{ fontSize: '6.5px', letterSpacing: '0.3em', opacity: 0.45 }}>
+                  {hasContent ? `${chPassages.length} passage${chPassages.length > 1 ? 's' : ''}` : 'Full text · Phase 2'}
+                </span>
+              </div>
+              <span style={{ color: 'rgba(201,168,76,0.4)', fontSize: 12, flexShrink: 0 }}>›</span>
+            </motion.button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ── ETHIOPIAN BIBLE PARTS ─────────────────────────────────────
 function BiblePartsView({ onBack, onPart }: { onBack: () => void; onPart: (partIdx: number) => void }) {
   const partColors = [
@@ -543,7 +633,8 @@ export default function ChristScreen() {
   const [view, setView] = useState<View>('home')
   const [christTheme, setChristTheme] = useState<string>('__all__')
   const [christThemeLabel, setChristThemeLabel] = useState('All Teachings')
-  const [enochBookTitle, setEnochBookTitle] = useState('__all__')
+  const [enochBookIndex, setEnochBookIndex] = useState<number | null>(null) // null = all books
+  const [enochChapter, setEnochChapter] = useState(0) // 0 = all chapters in book
   const [biblePartIdx, setBiblePartIdx] = useState(0)
   const [selectedBook, setSelectedBook] = useState('')
 
@@ -551,12 +642,26 @@ export default function ChristScreen() {
     ? JESUS_TEACHINGS
     : JESUS_TEACHINGS.filter(p => p.theme === christTheme)
 
-  const enochPassages = enochBookTitle === '__all__'
-    ? BOOK_OF_ENOCH_PASSAGES
-    : BOOK_OF_ENOCH_PASSAGES.filter(p => {
-        const bookNum = BOOK_OF_ENOCH_STRUCTURE.findIndex(b => b.title === enochBookTitle) + 1
-        return p.reference.includes(`Book ${bookNum}`) || p.reference.includes(`B${bookNum}`)
-      })
+  // Build the passage list for the Enoch reader
+  const enochPassages: ScripturePassage[] = (() => {
+    if (enochBookIndex === null) return BOOK_OF_ENOCH_PASSAGES
+    if (enochChapter === 0) {
+      const bp = getBookPassages(enochBookIndex)
+      return bp.length > 0 ? bp : BOOK_OF_ENOCH_PASSAGES
+    }
+    const cp = getChapterPassages(enochBookIndex, enochChapter)
+    if (cp.length > 0) return cp
+    // Chapter has no specific passages — fall back to all book passages
+    const bp = getBookPassages(enochBookIndex)
+    return bp.length > 0 ? bp : BOOK_OF_ENOCH_PASSAGES
+  })()
+
+  const enochReaderTitle = (() => {
+    if (enochBookIndex === null) return 'Book of Enoch'
+    const book = BOOK_OF_ENOCH_STRUCTURE[enochBookIndex]
+    if (enochChapter === 0) return book.title
+    return `${book.title} · Ch. ${enochChapter}`
+  })()
 
   return (
     <div className="h-full overflow-hidden relative">
@@ -583,17 +688,37 @@ export default function ChristScreen() {
         {view === 'enoch-books' && (
           <motion.div key="enoch-books" className="absolute inset-0"
             initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-            <EnochBooksView onBack={() => setView('home')} onBook={(title) => { setEnochBookTitle(title); setView('enoch-reader') }} />
+            <EnochBooksView
+              onBack={() => setView('home')}
+              onBook={(title) => {
+                if (title === '__all__') {
+                  setEnochBookIndex(null); setEnochChapter(0); setView('enoch-reader')
+                } else {
+                  const idx = BOOK_OF_ENOCH_STRUCTURE.findIndex(b => b.title === title)
+                  setEnochBookIndex(idx); setEnochChapter(0); setView('enoch-chapters')
+                }
+              }}
+            />
+          </motion.div>
+        )}
+        {view === 'enoch-chapters' && enochBookIndex !== null && (
+          <motion.div key="enoch-chapters" className="absolute inset-0"
+            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+            <EnochChaptersView
+              bookIndex={enochBookIndex}
+              onBack={() => setView('enoch-books')}
+              onChapter={(ch) => { setEnochChapter(ch); setView('enoch-reader') }}
+            />
           </motion.div>
         )}
         {view === 'enoch-reader' && (
           <motion.div key="enoch-reader" className="absolute inset-0"
             initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
             <ScriptureReader
-              passages={enochPassages.length > 0 ? enochPassages : BOOK_OF_ENOCH_PASSAGES}
+              passages={enochPassages}
               startIndex={0}
-              title={enochBookTitle === '__all__' ? 'Book of Enoch' : enochBookTitle}
-              onBack={() => setView('enoch-books')}
+              title={enochReaderTitle}
+              onBack={() => enochBookIndex !== null ? setView('enoch-chapters') : setView('enoch-books')}
               accentColor="rgba(26,35,126,0.6)"
             />
           </motion.div>
